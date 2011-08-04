@@ -1,0 +1,91 @@
+{
+  "name"    : "ShinyProxy",
+
+  "include" :
+  [
+    {
+      "path" : "${QOOXDOO_PATH}/tool/data/config/application.json"
+    }
+  ],
+
+  "export" :
+  [
+    "api",
+    "api-data",
+    "build-background",
+    "build",
+    "clean",
+    "distclean",
+    "fix",
+    "info",
+    "inspector",
+    "lint",
+    "migration",
+    "pretty",
+    "profiling",
+    "source",
+    "source-all",
+    "simulation-build",
+    "simulation-run",
+    "test",
+    "test-source",
+    "translation"
+  ],
+  
+  "default-job" : "source",
+
+  "let" :
+  {
+    "APPLICATION"  : "shinyproxy",
+    "QOOXDOO_PATH" : "../../../../../opt/qooxdoo",
+    "QXTHEME"      : "shinyproxy.theme.Theme",
+    "API_EXCLUDE"  : ["qx.test.*", "${APPLICATION}.theme.*", "${APPLICATION}.test.*", "${APPLICATION}.simulation.*"],
+    "LOCALES"      : [ "en" ],
+    "CACHE"        : "${TMPDIR}/cache",
+    "ROOT"         : ".",
+    "CHROMEPLUGIN" : "../qx-contrib/addchrome/ChromePlugin/trunk/Manifest.json"
+  }
+
+  // You only need to edit the remainder of this file, if you want to customize
+  // specific jobs, or add own job definitions.
+
+  ,"jobs" :
+  {
+    // Extend the options to add in the Chrome manifest file
+    "build-files" : 
+    {
+      "copy-files" :
+      {
+        "files" : ["manifest.json", "background.html", "script/${APPLICATION}_background.js"]
+      }
+    },
+    
+    // An extra job that we have to build the Chrome background script
+    "build-background" :
+    {
+      "extend" : ["build"],
+      "=include" :
+      [
+        "${QXTHEME}",
+        "${APPLICATION}.Background"
+      ],
+      "environment" : {
+	      "qx.application" : "${APPLICATION}.Background"
+      },
+      "library" : [{
+	      "manifest" : "${CHROMEPLUGIN}"
+      }],
+      "compile-options" :
+      {
+        "paths" : { "file" : "source/script/${APPLICATION}_background.js" }
+      }
+    },
+    
+    // And we need an external library
+    "libraries" : {
+      "library" : [{
+	    "manifest" : "${CHROMEPLUGIN}"
+      }]
+    }
+  }
+}

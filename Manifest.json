@@ -1,0 +1,34 @@
+{
+  "info" : 
+  {
+    "name" : "ShinyProxy",
+
+    "summary" : "Chrome browser extension for proxies",
+    "description" : "A plugin for the Chrome browser that allows a user to switch between a list of proxies quickly and easily.",
+    
+    "homepage" : "http://chrome.thehellings.com/",
+
+    "license" : "3-clause BSD",
+    "authors" : 
+    [
+      {
+        "name" : "Gregory Hellings",
+        "email" : "greg@thehellings.com"
+      }
+    ],
+
+    "version" : "trunk",
+    "qooxdoo-versions": ["1.5"]
+  },
+  
+  "provides" : 
+  {
+    "namespace"   : "shinyproxy",
+    "encoding"    : "utf-8",
+    "class"       : "source/class",
+    "resource"    : "source/resource",
+    "translation" : "source/translation",
+    "type"        : "application"
+  }
+}
+

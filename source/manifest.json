@@ -1,0 +1,18 @@
+{
+	"name" : "Shiny Proxy",
+	"version" : "0.1",
+	"description" : "Stores and allows fast switching between multiple proxy settings - just like FoxyProxy but for Chrome.",
+	"browser_action" : {
+		"default_icon" : "resource/shinyproxy/sp128.png",
+		"popup" : "index.html"
+	},
+	"icons" : {
+		"16" : "resource/shinyproxy/sp16.png",
+		"48" : "resource/shinyproxy/sp48.png",
+		"128": "resource/shinyproxy/sp128.png"
+	},
+	"permissions" : [
+		"proxy"
+	],
+	"background_page" : "background.html"
+}
