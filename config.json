@@ -43,7 +43,7 @@
     "LOCALES"      : [ "en" ],
     "CACHE"        : "${TMPDIR}/cache",
     "ROOT"         : ".",
-    "CHROMEPLUGIN" : "../qx-contrib/addchrome/ChromePlugin/trunk/Manifest.json"
+    "CHROMEPLUGIN" : "../qx-contrib/contrib/ChromePlugin/trunk/Manifest.json"
   }
 
   // You only need to edit the remainder of this file, if you want to customize
@@ -85,7 +85,11 @@
     "libraries" : {
       "library" : [{
 	    "manifest" : "${CHROMEPLUGIN}"
-      }]
+      },{
+		"manifest" : "../qx-contrib/contrib/MutableList/trunk/Manifest.json"
+	  },{
+		"manifest" : "../qx-contrib/contrib/Dialog/trunk/Manifest.json"
+	  }]
     }
   }
 }

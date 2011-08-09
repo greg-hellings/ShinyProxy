@@ -53,6 +53,7 @@ extend : chromeplugin.middleware.Service
 	 * the backend.
 	 */
 	,__load : function(proxies) {
+		console.log("Proxies set");
 		this.setProxies(proxies);
 	}
 	

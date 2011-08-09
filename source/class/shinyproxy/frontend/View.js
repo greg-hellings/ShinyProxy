@@ -20,7 +20,7 @@ extend : qx.ui.tabview.TabView
 	this.base(arguments);
 	
 	this.__service  = new shinyproxy.middleware.ProxyService();
-	this.bind("proxies", this.__service, "proxies");
+	this.__service.bind("proxies", this, "proxies");
 		
 	// Create the UI for the user
 	this.__createUIElements(this.__behavior);
@@ -53,6 +53,15 @@ extend : qx.ui.tabview.TabView
 	__listPane : null
 	,__createPane : null
 	,__currentPane : null
+	,__name : null
+	,__type : null
+	,__singleProxy : null
+	,__multiProxy  : {http : null, https : null, ftp : null, catchall : null}
+	,__multiProxyTabs : null
+	,__save : null
+	,__exceptions : null
+	,__createForm : null
+	,__singleMode : null
 	/**
 	 * Creates and constructs the UI elements which this class will
 	 * define, laying them out on the viewport.  There should be a
@@ -67,16 +76,25 @@ extend : qx.ui.tabview.TabView
 	 */
 	,__createUIElements : function(behavior) {
 		// Tablist
+		// First tab - the list of saved proxies
 		this.__listPage = new qx.ui.tabview.Page("List", null);
 		this.__listPage.setLayout(new qx.ui.layout.VBox());
+		this.__listPage.getLayout().setSpacing(5);
+		// The add/edit page
 		this.__createPage = new qx.ui.tabview.Page("Add/Edit", null);
+		this.__createPage.setLayout(new qx.ui.layout.VBox());
+		var scroller = new qx.ui.container.Scroll();
+		scroller.set({width: 100, height : 100});
+		this.__form  = new qx.ui.container.Composite();
+		this.__createForm(this.__form);
+		scroller.add(this.__form);
+		this.__createPage.add(this.__form);
+		// The display of current settings
 		this.__currentPage = new qx.ui.tabview.Page("Current settings", null);
 		
 		this.add(this.__listPage);
 		this.add(this.__createPage);
 		this.add(this.__currentPage);
-		
-		//this.__createPage.hide();
 	}
 	
 	/**
@@ -85,7 +103,7 @@ extend : qx.ui.tabview.TabView
 	 * @param e {Event} The change event.
 	 */
 	,__changeProxies : function(e) {
-		var list = this.getProxies();
+		var list = qx.lang.Array.toArray(this.getProxies());
 		
 		// Add a default "Clear the proxies" button
 		var val = {
@@ -100,7 +118,87 @@ extend : qx.ui.tabview.TabView
 		}, this);
 	}
 	
+	/**
+	 * Creates the basic form that will be used to add new/edit old
+	 * proxies to the list.
+	 */
+	,__createForm : function(dest) {
+		dest.setLayout(new qx.ui.layout.Grid());
+		dest.getLayout().setColumnFlex(1, 1);
+		
+		// Name line
+		this.__name = new qx.ui.form.TextField();
+		dest.add(new qx.ui.basic.Label("Name"), {row : 0, column : 0});
+		dest.add(this.__name, {row : 0, column : 1});
+		
+		// Buttons?
+		var single = new qx.ui.form.RadioButton("Single");
+		var multi  = new qx.ui.form.RadioButton("Multiple");
+		this.__type= new qx.ui.form.RadioGroup(single, multi);
+		dest.add(single, {row : 1, column : 0});
+		dest.add(multi,  {row : 1, column : 1});
+		
+		// Proxy forms
+		this.__singleProxy = new shinyproxy.frontend.ProxyForm();
+		this.__multiProxy  = {
+			https : new shinyproxy.frontend.ProxyForm()
+			,ftp  : new shinyproxy.frontend.ProxyForm()
+			,http : new shinyproxy.frontend.ProxyForm()
+			,catchall : new shinyproxy.frontend.ProxyForm()
+		};
+		this.__multiProxyTabs = new qx.ui.tabview.TabView();
+		this.__multiProxyTabs.add(this.__createProxyTab('HTTP', this.__multiProxy.http));
+		this.__multiProxyTabs.add(this.__createProxyTab('HTTPS', this.__multiProxy.https));
+		this.__multiProxyTabs.add(this.__createProxyTab('FTP', this.__multiProxy.ftp));
+		this.__multiProxyTabs.add(this.__createProxyTab('Catchall', this.__multiProxy.catchall));
+		
+		// There are two possibilities here, only one of them will be
+		// displayed at a time
+		this.__activateMultiMode(false);
+		
+		// The exceptions list
+		this.__exceptions = new mutablelist.MutableList("Exceptions", "Host");
+		this.__exceptions.setData([["localhost"]]);
+		dest.add(this.__exceptions, {row : 3, column : 0, colSpan : 2});
+		
+		this.__saveButton = new qx.ui.form.Button("Save");
+		dest.add(this.__saveButton, {row : 4, column : 0});
+	}
 	
+	/**
+	 * Turns the form into a multi-proxy mode or single proxy mode.
+	 * 
+	 * @param yes {Boolean} True if you want multi proxy, false if you
+	 * want single proxy.
+	 */
+	,__activateMultiMode : function(yes) {
+		// Put us into multi proxy mode
+		if(yes) {
+			if(this.__singleMode === true) this.__form.remove(this.__singleProxy);
+			this.__form.add(this.__multiProxyTabs, {row : 2, column : 0, colSpan : 2});
+			this.__singleProxy = false;
+		} else {
+			if(this.__singleMode === false) this.__form.remove(this.__multiProxyTabs);
+			this.__form.add(this.__singleProxy, {row : 2, column : 0, colSpan : 2});
+		}
+	}
+	
+	/**
+	 * Straightforward little helper that generates one of the tabs for
+	 * the layout of a ProxyForm widget.
+	 * 
+	 * @param title {String} The title for this tab page
+	 * @param widget {shinyproxy.frontend.ProxyForm} The widget to add to
+	 * the tab page
+	 * @return {qx.ui.tabview.Page} The page to add to the tabs widget
+	 */
+	,__createProxyTab : function(title, widget) {
+		var page = new qx.ui.tabview.Page(title);
+		page.setLayout(new qx.ui.layout.Basic());
+		page.add(widget, {top : 2, left : 2});
+		
+		return page;
+	}
 	/* ***************************************************************
 	 * 
 	 * Public Members
