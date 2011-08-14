@@ -1,6 +1,6 @@
 /* *********************************************************************
 
-No assets here
+#ignore(chrome.proxy.settings)
 
 ***********************************************************************/
 
@@ -93,6 +93,7 @@ extend : qx.ui.tabview.TabView
 		this.__createPage.add(scroller, {top : 2, left : 2, bottom : 2, right : 2});
 		// The display of current settings
 		this.__currentPage = new qx.ui.tabview.Page("Current settings", null);
+		this.addListener("changeSelection", this.__displayCurrent, this);
 		
 		this.add(this.__listPage);
 		this.add(this.__createPage);
@@ -115,8 +116,15 @@ extend : qx.ui.tabview.TabView
 			mode : "direct",
 			key : "No Proxies"
 		};
-		
 		this.__listPage.add(new shinyproxy.frontend.Proxy(val, this, true));
+		
+		// And a second default to enable the system settings.
+		val = {
+			mode : "system",
+			key  : "Use system settings"
+		};
+		this.__listPage.add(new shinyproxy.frontend.Proxy(val, this, true));
+	
 		// forEach is added to the base Array object by qx
 		list.forEach(function(val) {
 			this.__listPage.add(new shinyproxy.frontend.Proxy(val, this));
@@ -281,6 +289,66 @@ extend : qx.ui.tabview.TabView
 		if(config.rules.bypassList) {
 			this.__exceptions.setData(config.rules.bypassList);
 		}
+	}
+	
+	/**
+	 * Displays the current settings in the widget passed in.
+	 * 
+	 * @param tar {Widget} The target widget where the results will be
+	 * displayed.
+	 */
+	,__displayCurrent : function(tar) {
+		tar = this.__currentPage;
+		
+		// Establish a basic table-like layout
+		tar.removeAll();
+		var v = new qx.ui.layout.Grid();
+		v.setColumnFlex(0, 1);
+		tar.setLayout(v);
+		
+		// Request the settings - we won't go through the backend for this
+		// since it seems mostly unnecessary and because the request for
+		// the settings is asynchronous, making it much easier to read
+		// them here in the frontend
+		chrome.proxy.settings.get({incognito : false}, function(c) {
+			var p = c.value;
+			console.log(p);
+			// Define the mode
+			var l = new qx.ui.embed.Html();
+			l.setHtml("<strong>Mode:</strong>");
+			tar.add(l, {row : 0, column :0});
+			
+			// Tell people the settings
+			if(p.mode == "system") {
+				tar.add(new qx.ui.basic.Label("Using system settings"), {row : 0, column : 1});
+			} else if(p.mode == "direct") {
+				tar.add(new qx.ui.basic.Label("Direct connection"), {row : 0, column : 1});
+			} else if(p.mode == "fixed_servers") {
+				tar.add(new qx.ui.basic.Label("Fixed proxy"), {row : 0, column : 1});
+				
+				// Give the details
+				l = new qx.ui.embed.Html();
+				l.setHtml("<strong>Server:</strong>");
+				tar.add(l, {row : 1, column : 0});
+				tar.add(new qx.ui.basic.Label(p.rules.singleProxy.scheme + ' ' +
+											  p.rules.singleProxy.host +
+											  (p.rules.singleProxy.port ? ':' + p.rules.singleProxy.port : '')
+											 ), {row : 1, column : 1});
+				
+				// And the exceptions
+				l = new qx.ui.embed.Html();
+				l.setHtml("<strong>Exceptions:</strong>");
+				tar.add(l, {row : 2, column : 0, rowSpan : p.rules.bypassList.length + 1});
+				p.rules.bypassList.forEach(function(val, idx) {
+					tar.add(new qx.ui.basic.Label(val), {row : idx + 2, column : 1});
+				});
+				
+				// And make the bottom of it flex
+				v.setRowFlex(2 + p.rules.bypassList.length, 1);
+			} else {
+				console.log(p);
+			}
+		});
 	}
 	
 	/* ***************************************************************
