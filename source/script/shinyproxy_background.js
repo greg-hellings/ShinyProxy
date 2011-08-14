@@ -19,7 +19,7 @@ qx.$$packageData = {};
 
 qx.$$loader = {
   parts : {"boot":[0]},
-  packages : {"0":{"uris":["__out__:shinyproxy_background.bc8a789005e4.js"]}},
+  packages : {"0":{"uris":["__out__:shinyproxy_background.8d622e4c356e.js"]}},
   urisBefore : [],
   cssBefore : [],
   boot : "boot",
@@ -11652,139 +11652,52 @@ return;
 }this.__pQ[r]=s;
 }}});
 })();
-(function(){var j='proxies',i="add",h="update",g="list",f="shinyproxy.backend.ProxyServiceImpl",e='regular',d="proxies",c="clear",b="get",a="set";
-qx.Class.define(f,{extend:chromeplugin.backend.ServiceImpl,construct:function(){chromeplugin.backend.ServiceImpl.call(this,d);
-this.register(g,this.list);
-this.register(a,this.set);
-this.register(b,this.get);
-this.register(i,this.add);
-this.register(h,this.update);
-this.register(c,this.clear);
-var k=null;
+(function(){var l='proxies',k='regular',j="list",i="save",h="proxies",g="shinyproxy.backend.ProxyServiceImpl",f="Clearing settings",e="clear",d="get",c="set",a="Set",b="Setting proxy";
+qx.Class.define(g,{extend:chromeplugin.backend.ServiceImpl,construct:function(){chromeplugin.backend.ServiceImpl.call(this,h);
+this.register(j,this.list);
+this.register(c,this.set);
+this.register(d,this.get);
+this.register(i,this.save);
+this.register(e,this.clear);
+var m=null;
 
-try{k=qx.lang.Json.parse(localStorage[j]);
-}catch(l){}if(!k){this.__lt();
-}else{if(k.version!=this.__pS){k=this.__pT(k);
-}this.__pR=new qx.type.Array();
-this.__pR.append(k.entries);
-}},members:{__pR:null,__pS:1,list:function(){return this.__pR;
-},set:function(m){var n=false;
+try{m=qx.lang.Json.parse(localStorage[l]);
+}catch(n){}if(!m){this.__lt();
+}else{if(m.version!=this.__pS){m=this.__pT(m);
+}this.__pR=m.entries;
+}},members:{__pR:[],__pS:1,list:function(){return this.__pR;
+},set:function(o){var p=false;
+delete o.key;
 
-if(m==null){chrome.proxy.settings.clear({scope:e},function(){n=true;
+if(o==null){console.log(f);
+chrome.proxy.settings.clear({scope:k},function(){p=true;
 });
-}else{chrome.proxy.settings.set(m,function(){n=true;
+}else{console.log(b,o);
+chrome.proxy.settings.set({value:o,scope:k},function(){p=true;
+console.log(arguments);
 });
-}return n;
-},get:function(o){if(o<this.__pR.length)return this.__pR[o];
+console.log(a,p);
+}return p;
+},get:function(q){if(q<this.__pR.length)return this.__pR[q];
 else return null;
-},add:function(p,q){this.key=p;
-this.__pR.push(q);
-this.__lt();
-},update:function(r,s){s.key=r;
+},save:function(r,s){s.key=r;
 var t=false;
 this.__pR.forEach(function(u,v){if(u.key==r){this.__pR[v]=s;
 t=true;
 }},this);
-this.__pR.push(s);
+if(!t)this.__pR.push(s);
 this.__lt();
-},clear:function(){this.__pR=new qx.type.Array();
+},clear:function(){this.__pR=[];
 this.__lt();
 },__lt:function(x){var w;
 
 if(!x)w={version:this.__pS,entries:this.__pR};
 else w=x;
-localStorage.setItem(j,qx.lang.Json.stringify(w));
+localStorage.setItem(l,qx.lang.Json.stringify(w));
+console.log(localStorage.proxies);
 },__pT:function(y){y={version:this.__pS,entries:[]};
 this.__lt(y);
 return y;
-}}});
-})();
-(function(){var f="mshtml",e="engine.name",d="pop.push.reverse.shift.sort.splice.unshift.join.slice",c="number",b="qx.type.BaseArray",a=".";
-qx.Class.define(b,{extend:Array,construct:function(g){},members:{toArray:null,valueOf:null,pop:null,push:null,reverse:null,shift:null,sort:null,splice:null,unshift:null,concat:null,join:null,slice:null,toString:null,indexOf:null,lastIndexOf:null,forEach:null,filter:null,map:null,some:null,every:null}});
-(function(){function k(l){if((qx.core.Environment.get(e)==f)){j.prototype={length:0,$$isArray:true};
-var o=d.split(a);
-
-for(var length=o.length;length;){j.prototype[o[--length]]=Array.prototype[o[length]];
-}}var p=Array.prototype.slice;
-j.prototype.concat=function(){var r=this.slice(0);
-
-for(var i=0,length=arguments.length;i<length;i++){var q;
-
-if(arguments[i] instanceof j){q=p.call(arguments[i],0);
-}else if(arguments[i] instanceof Array){q=arguments[i];
-}else{q=[arguments[i]];
-}r.push.apply(r,q);
-}return r;
-};
-j.prototype.toString=function(){return p.call(this,0).toString();
-};
-j.prototype.toLocaleString=function(){return p.call(this,0).toLocaleString();
-};
-j.prototype.constructor=j;
-j.prototype.indexOf=qx.lang.Core.arrayIndexOf;
-j.prototype.lastIndexOf=qx.lang.Core.arrayLastIndexOf;
-j.prototype.forEach=qx.lang.Core.arrayForEach;
-j.prototype.some=qx.lang.Core.arraySome;
-j.prototype.every=qx.lang.Core.arrayEvery;
-var m=qx.lang.Core.arrayFilter;
-var n=qx.lang.Core.arrayMap;
-j.prototype.filter=function(){var s=new this.constructor;
-s.push.apply(s,m.apply(this,arguments));
-return s;
-};
-j.prototype.map=function(){var t=new this.constructor;
-t.push.apply(t,n.apply(this,arguments));
-return t;
-};
-j.prototype.slice=function(){var u=new this.constructor;
-u.push.apply(u,Array.prototype.slice.apply(this,arguments));
-return u;
-};
-j.prototype.splice=function(){var v=new this.constructor;
-v.push.apply(v,Array.prototype.splice.apply(this,arguments));
-return v;
-};
-j.prototype.toArray=function(){return Array.prototype.slice.call(this,0);
-};
-j.prototype.valueOf=function(){return this.length;
-};
-return j;
-}function j(length){if(arguments.length===1&&typeof length===c){this.length=-1<length&&length===length>>.5?length:this.push(length);
-}else if(arguments.length){this.push.apply(this,arguments);
-}}function h(){}h.prototype=[];
-j.prototype=new h;
-j.prototype.length=0;
-qx.type.BaseArray=k(j);
-})();
-})();
-(function(){var a="qx.type.Array";
-qx.Class.define(a,{extend:qx.type.BaseArray,construct:function(b){qx.type.BaseArray.apply(this,arguments);
-},members:{clone:qx.type.BaseArray.prototype.concat,insertAt:function(c,i){this.splice(i,0,c);
-return this;
-},insertBefore:function(d,e){var i=this.indexOf(e);
-
-if(i==-1){this.push(d);
-}else{this.splice(i,0,d);
-}return this;
-},insertAfter:function(f,g){var i=this.indexOf(g);
-
-if(i==-1||i==(this.length-1)){this.push(f);
-}else{this.splice(i+1,0,f);
-}return this;
-},removeAt:function(i){return this.splice(i,1)[0];
-},removeAll:function(){this.length=0;
-return this;
-},append:function(h){var j=h;
-if(h instanceof qx.type.Array){j=[];
-
-for(var i=0;i<h.length;i++){j[i]=h[i];
-}}Array.prototype.push.apply(this,j);
-return this;
-},remove:function(k){var i=this.indexOf(k);
-
-if(i!=-1){this.splice(i,1);
-return k;
-}},contains:function(l){return this.indexOf(l)!==-1;
 }}});
 })();
 

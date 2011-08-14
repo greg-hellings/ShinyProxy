@@ -24,8 +24,7 @@ extend : chromeplugin.backend.ServiceImpl
 	this.register("list", this.list);
 	this.register("set", this.set);
 	this.register("get", this.get);
-	this.register("add", this.add);
-	this.register("update", this.update);
+	this.register("save", this.save);
 	this.register("clear", this.clear);
 	
 	// Retrieve the list of proxies
@@ -43,8 +42,7 @@ extend : chromeplugin.backend.ServiceImpl
 		if(proxies.version != this.__version) {
 			proxies = this.__update(proxies); 
 		}
-		this.__proxies = new qx.type.Array();
-		this.__proxies.append(proxies.entries);
+		this.__proxies = proxies.entries;
 	}
 }
 
@@ -52,7 +50,7 @@ extend : chromeplugin.backend.ServiceImpl
  * Member methods
  */
 ,members : {
-	__proxies : null
+	__proxies : []
 	,__version : 1
 	/**
 	 * Returns a list of proxies that have been saved.
@@ -74,15 +72,20 @@ extend : chromeplugin.backend.ServiceImpl
 	 */
 	,set : function(settings) {
 		var val = false;
+		delete settings.key;
 		if(settings == null) {
+			console.log("Clearing settings");
 			chrome.proxy.settings.clear({scope: 'regular'}, function() {
 				val = true;
 			});
 		} else {
 			// Now, set the values as the user has requested we do
-			chrome.proxy.settings.set(settings, function() {
+			console.log("Setting proxy", settings);
+			chrome.proxy.settings.set({value : settings, scope : 'regular'}, function() {
 				val = true;
+				console.log(arguments);
 			});
+			console.log("Set", val);
 		}
 		return val;
 	}
@@ -99,27 +102,13 @@ extend : chromeplugin.backend.ServiceImpl
 	}
 	
 	/**
-	 * Adds a new entry to the proxy config list.
-	 * 
-	 * @param key {String} The name of this one
-	 * @param config {Object} The item to add to the list.
-	 * @return Null
-	 */
-	,add : function(key, config) {
-		this.key = key;
-		this.__proxies.push(config);
-		
-		this.__save();
-	}
-	
-	/**
 	 * Updates the config in a particular element to be the new value.
 	 * 
 	 * @param key {String} The element in the proxies array to modify
 	 * @param config {Object} The new value for this parameter.
 	 * @return Null
 	 */
-	,update : function(key, config) {
+	,save : function(key, config) {
 		config.key = key;
 		var found = false;
 		// Iterate until we find the desired one
@@ -131,7 +120,8 @@ extend : chromeplugin.backend.ServiceImpl
 		}, this);
 		
 		// If it wasn't found, we'll add it
-		this.__proxies.push(config);
+		if(!found)
+			this.__proxies.push(config);
 		
 		this.__save();
 	}
@@ -142,7 +132,7 @@ extend : chromeplugin.backend.ServiceImpl
 	 * @return Null
 	 */
 	,clear : function() {
-		this.__proxies = new qx.type.Array();
+		this.__proxies = [];
 		
 		this.__save();
 	}
@@ -163,6 +153,7 @@ extend : chromeplugin.backend.ServiceImpl
 		else
 			proxies = x;
 		localStorage.setItem('proxies', qx.lang.Json.stringify(proxies));
+		console.log(localStorage.proxies);
 	}
 	
 	/**

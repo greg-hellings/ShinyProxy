@@ -14,8 +14,8 @@ extend : qx.ui.container.Composite
 	// 10 px between cells
 	this.getLayout().setSpacing(3);
 	// Minimum width
-	this.getLayout().setColumnMinWidth(2, 85);
-	this.getLayout().setColumnMinWidth(1, 85);
+	//~ this.getLayout().setColumnMinWidth(2, 85);
+	//~ this.getLayout().setColumnMinWidth(1, 85);
 	this.getLayout().setColumnMinWidth(0, 100);
 	// Decorators
 	//~ this.setDecorator(new qx.ui.decoration.Single(1, 'solid', 'gray'));
@@ -27,15 +27,19 @@ extend : qx.ui.container.Composite
 	this.__setB = new qx.ui.form.Button("Activate");
 	this.__editB = new qx.ui.form.Button("Edit");
 	this.__editB.setEnabled(!def);	// Disable the default/no proxy edit screen
+	this.__del = new qx.ui.form.Button("Delete");
+	this.__del.setEnabled(!def);
 	
 	
 	this._add(new qx.ui.basic.Label(proxy.key), { column : 0, row : 1/*, colSpan : 2 */});
 	this._add(this.__setB, { column : 1, row : 1 });
 	this._add(this.__editB, { column : 2, row : 1 });
+	this._add(this.__del, { column : 3, row : 1});
 	
 	// Add listeners - the View can handle it
 	this.__setB.addListener("click", this.__view.setProxy, this.__view);
 	this.__editB.addListener("click", this.__view.editProxy, this.__view);
+	this.__del.addListener("click", this.__view.deleteProxy, this.__view);
 	
 	this.show();
 }

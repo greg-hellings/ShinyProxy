@@ -53,7 +53,6 @@ extend : chromeplugin.middleware.Service
 	 * the backend.
 	 */
 	,__load : function(proxies) {
-		console.log("Proxies set");
 		this.setProxies(proxies);
 	}
 	
@@ -65,7 +64,7 @@ extend : chromeplugin.middleware.Service
 	 * @param config {Object} The Chrome config object
 	 */
 	,set : function(config) {
-		this.invoke("config", [config]);
+		this.invoke("set", [config]);
 	}
 	
 	/**
@@ -81,23 +80,13 @@ extend : chromeplugin.middleware.Service
 	}
 	
 	/**
-	 * Adds a new config to the list.
-	 * 
-	 * @param key {String} Name of the config
-	 * @param config {Object} The config parameters
-	 */
-	,add : function(key, config) {
-		this.invoke("add", [key, config]);
-	}
-	
-	/**
 	 * Updates a particular conf entry with the newly specified values.
 	 * 
 	 * @param key {String} The name of the entry to updated
 	 * @param config {Object} The new values to write for this entry.
 	 */
-	,update : function(key, config) {
-		this.invoke("update", [key,config]);
+	,save : function(key, config) {
+		this.invoke("save", [key,config]);
 	}
 	
 	/**
