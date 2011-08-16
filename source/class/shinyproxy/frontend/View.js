@@ -78,19 +78,33 @@ extend : qx.ui.tabview.TabView
 	 * behavior object associated with this module.
 	 */
 	,__createUIElements : function(behavior) {
+		var clear = {padding : 0, margin : 0};
+		this.set(clear);
+		this.setContentPadding(0);
 		// Tablist
 		// First tab - the list of saved proxies
 		this.__listPage = new qx.ui.tabview.Page("List", null);
-		this.__listPage.setLayout(new qx.ui.layout.VBox());
-		this.__listPage.getLayout().setSpacing(5);
+		this.__listPage.set(clear);
+		this.__listPage.setLayout(new qx.ui.layout.Canvas());
+		
+		var listScroller = new qx.ui.container.Scroll();
+		listScroller.set(clear);
+		this.__listPageView = new qx.ui.container.Composite(new qx.ui.layout.VBox());
+		this.__listPageView.getLayout();
+		this.__listPageView.set(clear);
+		listScroller.add(this.__listPageView);
+		this.__listPage.add(listScroller, {top : 5, left : 5, bottom : 0, right: 0});
+		
 		// The add/edit page
 		this.__createPage = new qx.ui.tabview.Page("Add/Edit", null);
 		this.__createPage.setLayout(new qx.ui.layout.Canvas());
+		
 		var scroller = new qx.ui.container.Scroll();
 		this.__form  = new qx.ui.container.Composite();
 		this.__createForm(this.__form);
 		scroller.add(this.__form);
 		this.__createPage.add(scroller, {top : 2, left : 2, bottom : 2, right : 2});
+		
 		// The display of current settings
 		this.__currentPage = new qx.ui.tabview.Page("Current settings", null);
 		this.addListener("changeSelection", this.__displayCurrent, this);
@@ -109,25 +123,25 @@ extend : qx.ui.tabview.TabView
 		var list = qx.lang.Array.toArray(this.getProxies());
 		
 		// First, remove the existing proxies from the list
-		this.__listPage.removeAll();
+		this.__listPageView.removeAll();
 		
 		// Add a default "Clear the proxies" button
 		var val = {
 			mode : "direct",
 			key : "No Proxies"
 		};
-		this.__listPage.add(new shinyproxy.frontend.Proxy(val, this, true));
+		this.__listPageView.add(new shinyproxy.frontend.Proxy(val, this, true));
 		
 		// And a second default to enable the system settings.
 		val = {
 			mode : "system",
 			key  : "Use system settings"
 		};
-		this.__listPage.add(new shinyproxy.frontend.Proxy(val, this, true));
+		this.__listPageView.add(new shinyproxy.frontend.Proxy(val, this, true));
 	
 		// forEach is added to the base Array object by qx
 		list.forEach(function(val) {
-			this.__listPage.add(new shinyproxy.frontend.Proxy(val, this));
+			this.__listPageView.add(new shinyproxy.frontend.Proxy(val, this));
 		}, this);
 	}
 	

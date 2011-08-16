@@ -12,7 +12,8 @@
 		"128": "resource/shinyproxy/sp128.png"
 	},
 	"permissions" : [
-		"proxy"
+		"proxy",
+		"http://dumpr.info/api/1.0/remote-addr"
 	],
 	"background_page" : "background.html"
 }

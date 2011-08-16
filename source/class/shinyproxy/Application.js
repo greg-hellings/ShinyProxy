@@ -60,8 +60,8 @@ qx.Class.define("shinyproxy.Application",
       // Create the base split pane view
       var view = new shinyproxy.frontend.View();
       this.getRoot().add(view, {top: 0, left: 0, right: 0, bottom: 0, edge : 0});
-      
-      //var behavior = new shinyproxy.frontend.Behavior(view);
     }
+    
+
   }
 });

@@ -3,8 +3,18 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>ChromeBibles</title>
+  <script type="text/javascript">// <!--
+	document.addEventListener("DOMContentLoaded",function() {
+		var x = document.getElementsByTagName("head")[0]
+		var s = document.createElement('script');
+		s.type = 'text/javascript';
+		s.src  = 'script/shinyproxy.js';
+		x.appendChild(s);
+	}, false);
+  // --></script>
 </head>
-<body style="height: 400px; width: 300px"><div style="height: 400px; width: 300px"></div>
-  <script type="text/javascript" src="script/shinyproxy.js"></script>
+<body style="height: 400px; width: 300px">
+  <div id="holder" style="height: 400px; width: 300px">
+  </div>
  </body>
 </html>

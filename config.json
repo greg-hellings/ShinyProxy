@@ -56,7 +56,12 @@
     {
       "copy-files" :
       {
-        "files" : ["manifest.json", "background.html", "script/${APPLICATION}_background.js"]
+        "files" : [
+				"manifest.json",
+				"background.html",
+				"script/${APPLICATION}_background.js",
+				"resource/shinyproxy/ajax-loader.gif"
+		]
       }
     },
     
