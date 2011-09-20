@@ -91,9 +91,9 @@
       "library" : [{
 	    "manifest" : "${CHROMEPLUGIN}"
       },{
-		"manifest" : "../qx-contrib/contrib/MutableList/trunk/Manifest.json"
+		"manifest" : "contrib://MutableList/trunk/Manifest.json"
 	  },{
-		"manifest" : "../qx-contrib/contrib/Dialog/trunk/Manifest.json"
+		"manifest" : "contrib://Dialog/trunk/Manifest.json"
 	  }]
     }
   }
