@@ -57,11 +57,11 @@
       "copy-files" :
       {
         "files" : [
-				"manifest.json",
-				"background.html",
-				"script/${APPLICATION}_background.js",
-				"resource/shinyproxy/ajax-loader.gif"
-		]
+          "manifest.json",
+          "background.html",
+          "script/${APPLICATION}_background.js",
+          "resource/shinyproxy/ajax-loader.gif"
+        ]
       }
     },
     
@@ -75,10 +75,10 @@
         "${APPLICATION}.Background"
       ],
       "environment" : {
-	      "qx.application" : "${APPLICATION}.Background"
+        "qx.application" : "${APPLICATION}.Background"
       },
       "library" : [{
-	      "manifest" : "${CHROMEPLUGIN}"
+        "manifest" : "${CHROMEPLUGIN}"
       }],
       "compile-options" :
       {
@@ -89,12 +89,28 @@
     // And we need an external library
     "libraries" : {
       "library" : [{
-	    "manifest" : "${CHROMEPLUGIN}"
+        "manifest" : "${CHROMEPLUGIN}"
       },{
-		"manifest" : "contrib://MutableList/trunk/Manifest.json"
-	  },{
-		"manifest" : "contrib://Dialog/trunk/Manifest.json"
-	  }]
+        "manifest" : "contrib://MutableList/trunk/Manifest.json"
+      },{
+        "manifest" : "contrib://Dialog/trunk/Manifest.json"
+      }]
+    },
+
+    "pretty-print" : {
+      "general" : {
+        "indent-string" : "    "
+      },
+      "comments" : {
+        "block" : {
+          "add" : true
+        }
+      },
+      "code" : {
+        "open-curly" : {
+          "newline-before" : "n"
+        }
+      }
     }
   }
 }
