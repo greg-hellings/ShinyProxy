@@ -37,7 +37,7 @@
   "let" :
   {
     "APPLICATION"  : "shinyproxy",
-    "QOOXDOO_PATH" : "../../../../../opt/qooxdoo",
+    "QOOXDOO_PATH" : "../../../../../usr/share/qooxdoo-3.0",
     "QXTHEME"      : "shinyproxy.theme.Theme",
     "API_EXCLUDE"  : ["qx.test.*", "${APPLICATION}.theme.*", "${APPLICATION}.test.*", "${APPLICATION}.simulation.*"],
     "LOCALES"      : [ "en" ],
