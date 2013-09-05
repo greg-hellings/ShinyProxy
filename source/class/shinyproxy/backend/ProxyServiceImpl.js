@@ -106,7 +106,6 @@ extend : chromeplugin.backend.ServiceImpl
 	 * 
 	 * @param key {String} The element in the proxies array to modify
 	 * @param config {Object} The new value for this parameter.
-	 * @return null
 	 */
 	,save : function(key, config) {
 		config.key = key;
@@ -128,8 +127,6 @@ extend : chromeplugin.backend.ServiceImpl
 	
 	/**
 	 * Deletes all entries in the proxy config.
-	 * 
-	 * @return null
 	 */
 	,clear : function() {
 		this.__proxies = [];
@@ -144,7 +141,6 @@ extend : chromeplugin.backend.ServiceImpl
 	 * value will be written to the localStorage, otherwise a new save value
 	 * will be written. Use this with caution, as you can break everything
 	 * if you are not careful
-	 * @return null
 	 */
 	,__save : function(x) {
 		var proxies;
