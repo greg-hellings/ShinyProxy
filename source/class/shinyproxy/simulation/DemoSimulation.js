@@ -13,7 +13,7 @@
  * application. See the manual for details:
  * {@link http://manual.qooxdoo.org/1.3/pages/development/simulator.html}
  * 
- * @lint ignoreUndefined(simulator)
+ * @ignore(simulator)
  */
 qx.Class.define("shinyproxy.simulation.DemoSimulation", {
 
